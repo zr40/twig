@@ -1,6 +1,6 @@
 module Twig
   class CoverageThread
-    def initialize coverage
+    def initialize
       wait_channel = Rubinius::Channel.new
       
       @thread = Thread.new do
@@ -10,7 +10,10 @@ module Twig
           wait_channel << true
 
           # receive debugger callbacks
-          coverage.hit debugger_channel.receive while true
+          while true
+            data = debugger_channel.receive
+            data[0].hit *data
+          end
         rescue Exception => e
           puts e
         end

@@ -1,15 +1,18 @@
 #!/usr/bin/env rbx
 require 'lib/coverage'
+require 'lib/coverage_point'
 
 Twig::Coverage.new
 
 def foo
 end
 
-bp = Rubinius::Debugger::BreakPoint.new :foo, method(:foo).executable, 0, 0
-bp.activate
+Twig::CoveragePoint.new method(:foo).executable, 0
 
 foo
 foo
 foo
 foo
+
+require 'something'
+bar
