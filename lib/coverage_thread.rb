@@ -1,36 +1,25 @@
 module Twig
   class CoverageThread
-    def start return_channel
-      @debugger_channel = Rubinius::Channel.new
-      @return_channel = return_channel
-
-      @channel = @return_channel
+    def initialize coverage
+      wait_channel = Rubinius::Channel.new
       
       @thread = Thread.new do
         begin
-          @thread.setup_control! @debugger_channel
+          debugger_channel = Rubinius::Channel.new
+          @thread.setup_control! debugger_channel
+          wait_channel << true
 
-          while true
-            listen
-          end
+          # receive debugger callbacks
+          coverage.hit debugger_channel.receive while true
         rescue Exception => e
           puts e
         end
       end
 
       # ensure the thread has called setup_control!
-      @return_channel.receive
+      wait_channel.receive
 
       Thread.current.set_debugger_thread @thread
-    end
-
-    # receive a debugger callback
-    def listen
-      @channel << true
-      breakpoint, thread, @channel, vm_locations = @debugger_channel.receive
-
-      breakpoint.remove!
-      puts "DEBUG: #{breakpoint} (#{breakpoint.instance_variable_get :@temp}), #{thread}, #{vm_locations}"
     end
   end
 end

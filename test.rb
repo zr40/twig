@@ -1,16 +1,7 @@
 #!/usr/bin/env rbx
-require 'lib/coverage_thread'
-require 'rubinius/debugger'
-require 'compiled_hook'
+require 'lib/coverage'
 
-def compiled script
-  puts "Loaded #{script.file_path}"
-end
-
-Rubinius::CodeLoader.compiled_hook.add method :compiled
-
-
-Twig::CoverageThread.new.start Rubinius::Channel.new
+Twig::Coverage.new
 
 def foo
 end
