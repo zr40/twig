@@ -7,15 +7,19 @@ module Twig
         begin
           debugger_channel = Rubinius::Channel.new
           @thread.setup_control! debugger_channel
-          wait_channel << true
+
+          data = [nil, nil, wait_channel, nil]
 
           # receive debugger callbacks
           while true
+            data[2] << true
             data = debugger_channel.receive
             data[0].hit *data
           end
         rescue Exception => e
-          puts e
+          puts "Twig coverage thread exception: #{e}"
+          puts e.message
+          puts e.backtrace
         end
       end
 
