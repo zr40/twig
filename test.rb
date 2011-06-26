@@ -1,6 +1,5 @@
 #!/usr/bin/env rbx
 require 'lib/coverage'
-require 'lib/coverage_point'
 
 Twig::Coverage.new
 

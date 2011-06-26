@@ -1,5 +1,7 @@
-require 'lib/coverage_thread'
 require 'lib/compiled_hook'
+require 'lib/coverage_point'
+require 'lib/coverage_thread'
+require 'lib/report'
 
 module Twig
   class Coverage
@@ -13,6 +15,10 @@ module Twig
     def compiled script
       add_coverage_points script.compiled_method
     end
+
+    def report
+      Report.new @coverage_points
+    end 
 
     def add_coverage_points method
       method.child_methods.each { |child| add_coverage_points child }
