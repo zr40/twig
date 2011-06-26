@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+require 'lib/coverage'
+
+coverage = Twig::Coverage.new
+
+require ARGV.shift
+
+report = coverage.report
+
+# TODO
