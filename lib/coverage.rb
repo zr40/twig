@@ -42,6 +42,9 @@ module Twig
       @branch_origin = cp
       @branch_target_0 = @coverage_points[[cp.cmethod, cp.ip + 2]]
       @branch_target_1 = @coverage_points[[cp.cmethod, cp.cmethod.iseq.opcodes[cp.ip + 1]]]
+
+      @branch_target_0.enable
+      @branch_target_1.enable
     end
 
     # record branch taken
