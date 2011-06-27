@@ -1,4 +1,3 @@
-require 'twig/compiled_hook'
 require 'twig/coverage_point'
 require 'twig/coverage_thread'
 require 'twig/report'

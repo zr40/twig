@@ -1,1 +1,1 @@
-rvm rbx
+rvm rbx-master # local fork containing CodeLoader.compiled_hook
