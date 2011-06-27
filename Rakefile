@@ -2,11 +2,9 @@ gemspec = eval(File.read(Dir["*.gemspec"].first))
 
 desc 'Run tests'
 task :test do
-  puts 'No tests implemented yet'
-  #require 'cutest'
-  #$: << File.dirname(File.absolute_path __FILE__) + '/lib'
+  require 'cutest'
   
-  #Cutest.run Dir['test/**/*.rb']
+  Cutest.run ['test/tests.rb']
 end
 
 desc 'Validate the gemspec'
