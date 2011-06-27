@@ -48,16 +48,18 @@ module Twig
 
     # record branch taken
     def reach cp
-      if cp == @branch_target_0
-        @branch_origin.branch_to 0
-        @branch_target_1.disable_if_hit
-        @branch_origin = nil
-      elsif cp == @branch_target_1
-        @branch_origin.branch_to 1
-        @branch_target_0.disable_if_hit
-        @branch_origin = nil
-      elsif @branch_origin
-        raise 'Branch origin is set but current location is not a branch target'
+      if @branch_origin
+        if cp == @branch_target_0
+          @branch_origin.branch_to 0
+          @branch_target_1.disable_if_hit
+          @branch_origin = nil
+        elsif cp == @branch_target_1
+          @branch_origin.branch_to 1
+          @branch_target_0.disable_if_hit
+          @branch_origin = nil
+        elsif @branch_origin
+          raise 'Branch origin is set but current location is not a branch target'
+        end
       end
     end
   end
