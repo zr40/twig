@@ -43,12 +43,24 @@ module Twig
       disable_if_hit
     end
 
-    def branched_to branch
+    def branch_to branch
       @branched_to[branch] = true
 
-      @hit = @branched_to[0] and @branched_to[1]
+      @hit = (@branched_to[0] and @branched_to[1])
 
       disable_if_hit
+    end
+
+    def hit?
+      @hit
+    end
+
+    def conditional_branch?
+      @conditional_branch
+    end
+
+    def branched_to? branch
+      @branched_to[branch]
     end
   end
 end

@@ -2,6 +2,9 @@ def a_method
   if true
     puts 'bar'
   end
+  if false
+    puts 'bar'
+  end
 end
 
 class AClass

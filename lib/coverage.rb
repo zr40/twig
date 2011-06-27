@@ -50,11 +50,11 @@ module Twig
     # record branch taken
     def reach cp
       if cp == @branch_target_0
-        @branch_origin.branched_to 0
+        @branch_origin.branch_to 0
         @branch_target_1.disable_if_hit
         @branch_origin = nil
       elsif cp == @branch_target_1
-        @branch_origin.branched_to 1
+        @branch_origin.branch_to 1
         @branch_target_0.disable_if_hit
         @branch_origin = nil
       elsif @branch_origin
