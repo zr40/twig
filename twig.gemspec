@@ -9,5 +9,6 @@ Gem::Specification.new do |s|
   s.platform = Gem::Platform::new ['universal', 'rubinius']
 
   s.files = %w( README.markdown CHANGELOG.markdown LICENSE )
-  s.files += Dir['lib/**/*.rb'] + Dir['bin/twig']
+  s.executables = ['twig']
+  s.files += Dir['lib/**/*.rb'] + ['bin/twig']
 end

@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require 'lib/coverage'
+require 'twig/coverage'
 
 coverage = Twig::Coverage.new
 

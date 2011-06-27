@@ -1,7 +1,7 @@
-require 'lib/compiled_hook'
-require 'lib/coverage_point'
-require 'lib/coverage_thread'
-require 'lib/report'
+require 'twig/compiled_hook'
+require 'twig/coverage_point'
+require 'twig/coverage_thread'
+require 'twig/report'
 
 module Twig
   class Coverage
