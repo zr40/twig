@@ -1,1 +1,14 @@
-all_reached: success
+all_reached:
+  success:
+
+unreachable:
+  not reached: [4]
+  not branched: []
+
+half_branches:
+  not reached: [3, 12, 18, 19]
+  not branched: [1, 2, 9, 11, 17]
+
+exception:
+  not reached: [4]
+  not branched: [5]

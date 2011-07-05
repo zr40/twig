@@ -1,10 +1,9 @@
 gemspec = eval(File.read(Dir["*.gemspec"].first))
 
-desc 'Run tests'
-task :test do
-  require 'cutest'
-  
-  Cutest.run ['test/tests.rb']
+require 'rspec/core/rake_task'
+
+RSpec::Core::RakeTask.new :test do |t|
+  t.pattern = 'test/tests.rb'
 end
 
 desc 'Validate the gemspec'

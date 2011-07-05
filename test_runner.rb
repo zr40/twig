@@ -5,20 +5,21 @@ require 'rubygems'
 require 'json'
 
 require 'twig/coverage'
+require 'compiler/printers'
 
 coverage = Twig::Coverage.new
 
-require ARGV.shift
+begin
+  require ARGV.shift
+rescue Exception => e
+  STDERR.puts "#{file}: unhandled #{e}"
+end
 
 report = coverage.report
 
 json = {
-  :overall => {
-    :instructions => report.instructions,
-    :branches => report.branches,
-    :instructions_reached => report.instructions_reached,
-    :both_branches_taken => report.both_branches_taken,
-  }
+  :overall => report.overall,
+  :lines => report.lines,
 }.to_json
 
 puts json

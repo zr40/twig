@@ -10,16 +10,16 @@ module Twig
 
           data = [nil, nil, wait_channel, nil]
 
-          # receive debugger callbacks
           while true
             data[2] << true
             data = debugger_channel.receive
             data[0].hit *data
           end
         rescue Exception => e
-          puts "Twig coverage thread exception: #{e}"
-          puts e.message
-          puts e.backtrace
+          STDERR.puts "Twig coverage thread exception: #{e}"
+          STDERR.puts e.message
+          STDERR.puts e.backtrace
+          raise
         end
       end
 

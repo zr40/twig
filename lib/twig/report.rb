@@ -1,44 +1,74 @@
 module Twig
   class Report
     def initialize coverage_points
-      $stderr.puts 'twig: processing coverage data...'
+      STDERR.puts 'twig: processing coverage data...'
 
-      calculate_overall coverage_points
+      @coverage_points = coverage_points
+      @branches = find_branches
+
+      calculate_overall
+      calculate_line_coverage coverage_points
       # TODO
     end
 
-    attr_reader :instructions, :branches, :instructions_reached, :both_branches_taken
+    def find_branches
+      branch_opcodes = [Rubinius::InstructionSet.opcodes_map[:goto_if_true], Rubinius::InstructionSet.opcodes_map[:goto_if_false]]
 
-    def calculate_overall coverage_points
-      @instructions = coverage_points.length
-      @branches = 0
-      @instructions_reached = 0
-      @both_branches_taken = 0
+      branches = {}
+
+      @coverage_points.each_value do |cp|
+        branches[cp] = [cp.ip + 2, cp.cmethod.iseq[cp.ip + 1]] if branch_opcodes.index cp.cmethod.iseq[cp.ip]
+      end
+
+      branches
+    end
+
+    attr_reader :overall
+
+    def calculate_overall
+      instructions_hit = 0
+      both_branches_taken = 0
 
       opcodes = Rubinius::InstructionSet.opcodes
 
-      coverage_points.each_value do |cp|
-        if cp.conditional_branch?
-          @branches += 1
-        end
-
-        if cp.hit?
-          @instructions_reached += 1
-          @both_branches_taken += 1 if cp.conditional_branch?
-        elsif false
-          loc = "#{cp.cmethod.file}:#{cp.cmethod.line_from_ip cp.ip} (#{cp.cmethod.name}) -- IP@#{cp.ip}: #{opcodes[cp.cmethod.iseq[cp.ip]].name}"
- 
-          if cp.conditional_branch? and (cp.branched_to? 0 or cp.branched_to? 1)
-            if cp.branched_to? 0
-              $stderr.puts "Never jumped: #{loc}"
-            else
-              $stderr.puts "Always jumped: #{loc}"
-            end
-          else
-            $stderr.puts "Not reached: #{loc}"
-          end
-        end
+      @coverage_points.each_value do |cp|
+        instructions_hit += 1 if cp.hit?
       end
+
+      @branches.each do |cp, targets|
+        both_branches_taken += 1 if @coverage_points[[cp.cmethod, targets[0]]].hit? and @coverage_points[[cp.cmethod, targets[1]]].hit?
+      end
+
+      @overall = {
+        :instructions => @coverage_points.length,
+        :branches => @branches.length,
+        :instructions_hit => instructions_hit,
+        :both_branches_taken => both_branches_taken,
+      }
+    end
+
+    attr_reader :lines
+
+    def calculate_line_coverage coverage_points
+      hit = {}
+      branched = {}
+
+      @coverage_points.each_value do |cp|
+        key = "#{cp.cmethod.file}:#{cp.cmethod.line_from_ip cp.ip}"
+
+        hit[key] ||= cp.hit?
+      end
+
+      @branches.each_pair do |cp,targets|
+        key = "#{cp.cmethod.file}:#{cp.cmethod.line_from_ip cp.ip}"
+
+        target0 = @coverage_points[[cp.cmethod, targets[0]]]
+        target1 = @coverage_points[[cp.cmethod, targets[1]]]
+
+        branched[key] ||= (target0.hit? && target1.hit?) if cp.hit?
+      end
+
+      @lines = {:hit => hit, :branched => branched}
     end
   end
 end
